@@ -1,5 +1,12 @@
 # Sentiment Analysis System
 
+![Python](https://img.shields.io/badge/Python-3.10-blue)
+![Streamlit](https://img.shields.io/badge/Frontend-Streamlit-red)
+![FastAPI](https://img.shields.io/badge/Backend-FastAPI-green)
+![PostgreSQL](https://img.shields.io/badge/Database-Neon_PostgreSQL-blue)
+![ML](https://img.shields.io/badge/ML-Scikit--learn-orange)
+
+
 A full-stack Natural Language Processing (NLP) application that classifies customer reviews as **Positive** or **Negative** using Machine Learning and provides real-time predictions through a modern web interface and REST API.
 
 ---
