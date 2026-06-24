@@ -7,7 +7,7 @@ import requests
 import backend
 
 
-API_URL = "http://127.0.0.1:8000"
+API_URL = "https://sentiment-analysis-api-r6av.onrender.com"
 
 
 st.set_page_config(
