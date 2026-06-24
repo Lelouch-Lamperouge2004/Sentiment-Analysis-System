@@ -1,0 +1,9 @@
+venv/
+__pycache__/
+*.pyc
+
+.env
+
+sentiment_history.db
+
+.streamlit/secrets.toml
