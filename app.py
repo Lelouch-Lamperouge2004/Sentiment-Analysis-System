@@ -36,6 +36,16 @@ def api_predict(review):
     return response.json()
 
 
+def api_batch_predict(reviews):
+    response = requests.post(
+        f"{API_URL}/predict-batch",
+        json={"reviews": reviews},
+        timeout=60
+    )
+    response.raise_for_status()
+    return response.json()
+
+
 def api_history():
     response = requests.get(f"{API_URL}/history", timeout=10)
     response.raise_for_status()
@@ -64,7 +74,7 @@ page = st.sidebar.radio(
 
 st.title("Sentiment Analysis System")
 st.write(
-    "A full-stack NLP application using Streamlit, FastAPI, SQLite, "
+    "A full-stack NLP application using Streamlit, FastAPI, Neon PostgreSQL, "
     "SQLAlchemy, Scikit-learn, and a saved Linear SVC model."
 )
 
@@ -133,8 +143,8 @@ elif page == "Predict Review":
                 st.write("Processed Text")
                 st.code(result["processed_text"])
 
-            except requests.exceptions.RequestException:
-                st.error("FastAPI server is not running. Start it with: uvicorn backend_api.main:app --reload")
+            except requests.exceptions.RequestException as e:
+                st.error(f"API request failed: {e}")
 
 
 elif page == "Batch Prediction":
@@ -155,17 +165,9 @@ elif page == "Batch Prediction":
                 st.dataframe(upload_df.head(), use_container_width=True)
 
                 if st.button("Run Batch Prediction"):
-                    results = []
-
-                    for review in upload_df["review"]:
-                        result = api_predict(str(review))
-                        results.append({
-                            "review": review,
-                            "sentiment": result["sentiment"],
-                            "confidence": result["confidence"]
-                        })
-
-                    result_df = pd.DataFrame(results)
+                    reviews = upload_df["review"].dropna().astype(str).tolist()
+                    batch_results = api_batch_predict(reviews)
+                    result_df = pd.DataFrame(batch_results)
 
                     st.subheader("Prediction Results")
                     st.dataframe(result_df, use_container_width=True)
@@ -275,5 +277,5 @@ elif page == "Prediction Analytics":
         else:
             st.info("No predictions stored yet.")
 
-    except requests.exceptions.RequestException:
-        st.error("FastAPI server is not running. Start it with: uvicorn backend_api.main:app --reload")
+    except requests.exceptions.RequestException as e:
+        st.error(f"API request failed: {e}")

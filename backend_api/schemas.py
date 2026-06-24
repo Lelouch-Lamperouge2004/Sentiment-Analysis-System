@@ -22,3 +22,13 @@ class HistoryResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class BatchPredictionRequest(BaseModel):
+    reviews: list[str]
+
+
+class BatchPredictionItem(BaseModel):
+    review: str
+    sentiment: str
+    confidence: float
+    processed_text: str

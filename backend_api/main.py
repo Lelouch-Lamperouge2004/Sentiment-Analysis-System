@@ -8,6 +8,13 @@ from backend_api.database import engine, get_db
 from backend_api.models import Base, PredictionHistory
 from backend_api.schemas import PredictionRequest, PredictionResponse, HistoryResponse
 
+from backend_api.schemas import (
+    PredictionRequest,
+    PredictionResponse,
+    HistoryResponse,
+    BatchPredictionRequest,
+    BatchPredictionItem
+)
 
 Base.metadata.create_all(bind=engine)
 
@@ -81,3 +88,36 @@ def get_prediction_analytics(db: Session = Depends(get_db)):
         "negative_predictions": negative,
         "average_confidence": round(avg_confidence or 0, 2)
     }
+
+@app.post("/predict-batch", response_model=list[BatchPredictionItem])
+def predict_batch(
+    request: BatchPredictionRequest,
+    db: Session = Depends(get_db)
+):
+    results = []
+
+    for review in request.reviews:
+        if not str(review).strip():
+            continue
+
+        result = backend.predict_sentiment(str(review))
+
+        history = PredictionHistory(
+            review=str(review),
+            sentiment=result["sentiment"],
+            confidence=result["confidence"],
+            processed_text=result["processed_text"]
+        )
+
+        db.add(history)
+
+        results.append({
+            "review": str(review),
+            "sentiment": result["sentiment"],
+            "confidence": result["confidence"],
+            "processed_text": result["processed_text"]
+        })
+
+    db.commit()
+
+    return results
