@@ -15,7 +15,7 @@ A full-stack Natural Language Processing (NLP) application that classifies custo
 
 ### Frontend (Streamlit)
 
-https://sentiment-analysis-app-wlhpdgtxsrujcuepwjimzk.streamlit.app
+https://sentiment-analysis-systembranchmainmainfilepathapppy-f27bvgvzx.streamlit.app/
 
 ### Backend API (FastAPI)
 
