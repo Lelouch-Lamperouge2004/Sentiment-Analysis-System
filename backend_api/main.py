@@ -43,7 +43,7 @@ def predict_sentiment(request: PredictionRequest, db: Session = Depends(get_db))
     history = PredictionHistory(
         review=request.review,
         sentiment=result["sentiment"],
-        confidence=result["confidence"],
+        confidence=float(result["confidence"]),
         processed_text=result["processed_text"]
     )
 
@@ -105,7 +105,7 @@ def predict_batch(
         history = PredictionHistory(
             review=str(review),
             sentiment=result["sentiment"],
-            confidence=result["confidence"],
+            confidence=float(result["confidence"]),
             processed_text=result["processed_text"]
         )
 
